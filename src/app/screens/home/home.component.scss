@@ -1,0 +1,100 @@
+:host {
+  display: block;
+  background-color: #303030;
+  height: 100vh;
+  overflow: auto;
+}
+
+.header-gradient {
+  z-index: 1;
+  background: linear-gradient(145deg, #0d47a1, #1976d2);
+  position: absolute;
+  width: 100%;
+  min-height: 480px;
+  height: 50vh;
+  max-height: 560px;
+  box-sizing: border-box;
+  padding: 48px 48px 32px;
+  transform: skewY(8deg);
+  transform-origin: 100%;
+  margin-top: -80px;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  z-index: 3;
+}
+
+.content {
+  &__container {
+    z-index: 2;
+    position: absolute;
+    top: 128px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  &__card {
+    min-width: 480px;
+
+    &__row {
+      padding-left: 12px;
+      padding-right: 12px;
+      display: flex;
+
+      .mat-form-field {
+        flex: 1;
+
+        &:first-of-type {
+          margin-right: 16px;
+        }
+      }
+
+      &__target {
+        padding-top: 24px;
+
+        &__result {
+          flex: 1;
+          text-align: right;
+
+          &__title {
+            padding-top: 4px;
+            font-weight: 500;
+            opacity: .64;
+          }
+
+          &__value {
+            padding-top: 4px;
+            font-weight: 700;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.currency-select {
+
+  &__option {
+    display: flex;
+    justify-content: space-between;
+
+    &__name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding-right: 8px;
+    }
+
+    &__id {
+      opacity: .5;
+    }
+  }
+
+}

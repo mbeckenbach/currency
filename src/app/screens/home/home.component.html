@@ -1,0 +1,87 @@
+<!-- Define a reusable template for our select controls -->
+<ng-template #tplCurrencySelect let-args>
+  <mat-form-field>
+    <mat-label>{{args.label}}</mat-label>
+    <mat-select [formControl]="args.control" class="currency-select" required>
+      <mat-select-trigger>
+        {{args.control.value}}
+      </mat-select-trigger>
+      <mat-option *ngFor="let currency of currencies$ | async" [value]="currency.id">
+      <span class="currency-select__option">
+        <span class="currency-select__option__name">{{currency.currencyName}}</span>
+        <span class="currency-select__option__id">{{currency.id}}</span>
+      </span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-template>
+
+<!-- Just some eye candy -->
+<div class="header-gradient"></div>
+
+<!-- Simple toolbar with title and language change -->
+<mat-toolbar class="toolbar mat-elevation-z3" color="primary">
+  <span i18n="@@toolbar.title">Currency Converter</span>
+  <button [matMenuTriggerFor]="languageMenu" i18n-matTooltip="@@toolbar.change-language" mat-icon-button
+          matTooltip="Change language" type="button">
+    <mat-icon>language</mat-icon>
+  </button>
+  <mat-menu #languageMenu="matMenu">
+    <a href="/de-DE" mat-menu-item>Deutsch</a>
+    <a href="/en-US" mat-menu-item>English</a>
+  </mat-menu>
+</mat-toolbar>
+
+<div class="content__container">
+  <mat-card class="content__card">
+
+    <!-- Some intro header -->
+    <mat-card-header>
+      <mat-card-title i18n="@@home.contentCardTitle">Convert any currency into any other</mat-card-title>
+      <mat-card-subtitle i18n="@@home.contentCardSubtitle">Using live conversion rates</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <div class="content__card__row">
+        <!-- Amount -->
+        <mat-form-field>
+          <mat-label>
+            <ng-container *ngIf="form.controls.amount.valid; else invalidAmountLabel" i18n="@@home.amountLabel">Amount
+            </ng-container>
+            <ng-template #invalidAmountLabel>
+              <ng-container i18n="@@home.invalidAmountLabel">Enter an amount</ng-container>
+            </ng-template>
+          </mat-label>
+          <input [formControl]="form.controls.amount" [placeholder]="(0.0 | number: '1.2-2') || ''" matInput required
+                 type="number">
+        </mat-form-field>
+
+        <!-- Source currency -->
+        <ng-template
+          *ngTemplateOutlet="tplCurrencySelect; context: {$implicit: {control: form.controls.sourceCurrencyId, label: sourceCurrencyLabel}}"></ng-template>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="content__card__row content__card__row__target">
+        <!-- Target currency -->
+        <ng-template
+          *ngTemplateOutlet="tplCurrencySelect; context: {$implicit: {control: form.controls.targetCurrencyId, label: targetCurrencyLabel}}"></ng-template>
+
+        <!-- Display result-->
+        <div *ngIf="currenciesAsEntities$ | async as entities" class="content__card__row__target__result">
+          <div class="content__card__row__target__result__title" i18n="@@home.converted-value">Converted value</div>
+          <div class="content__card__row__target__result__value">
+            <ng-container *ngIf="result$ | async as result; else noResult">
+              {{result | currency: (entities[form.value.targetCurrencyId]?.currencySymbol || form.value.targetCurrencyId)}}
+            </ng-container>
+            <ng-template #noResult>-</ng-template>
+          </div>
+        </div>
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
